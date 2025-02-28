@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Satisfaction Review</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #fdfbee;
+            margin: 0;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .emoji {
+            font-size: 40px;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 10px;
+            display: inline-block;
+            transition: 0.3s;
+        }
+        .emoji:hover, .selected {
+            background: #f8f8f8;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .review-btn {
+            background: black;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-top: 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .review-btn:hover {
+            background: #333;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h3>How satisfied are you with our customer support performance?</h3>
+    <div id="options">
+        <div class="emoji" data-value="Unhappy">😔<br>Unhappy</div>
+        <div class="emoji" data-value="Neutral">😐<br>Neutral</div>
+        <div class="emoji" data-value="Satisfied">😍<br>Satisfied</div>
+    </div>
+    <button class="review-btn" onclick="sendReview()">Send Review</button>
+</div>
+
+<script>
+    let selectedEmoji = null;
+
+    document.querySelectorAll(".emoji").forEach(item => {
+        item.addEventListener("click", function () {
+            document.querySelectorAll(".emoji").forEach(emoji => emoji.classList.remove("selected"));
+            this.classList.add("selected");
+            selectedEmoji = this.getAttribute("data-value");
+        });
+    });
+
+    function sendReview() {
+        if (selectedEmoji) {
+            alert("You selected: " + selectedEmoji);
+        } else {
+            alert("Please select an option before submitting.");
+        }
+    }
+</script>
+
+</body>
+</html>
