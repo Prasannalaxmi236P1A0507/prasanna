@@ -1,26 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
-       <head>
-              <meta charset="UTF-8">
-              <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <link rel="stylesheet" href="style.css">
-              <title>Shopping Cart</title>
-       </head>
-       <body>
-              <header>
-                      <h1>Shopping Cart</h1>
-                      <nav>
-                             <ul> 
-                                    <li><a href="#register">Register</a></li>
-                                    <li><a href="#login">Login</a></li>
-                                    <li><a href="#catalog">Catalog</a></li>
-                                    <li><a href="#cart">Cart</a></li>
-                             </ul>
-                      </nav>
-              </header>
-              <main id="content">
-                     <!-- Content will be loaded dynamically using JavaScript -->
-              </main>
-              <script src="script.js"></script>
-       </body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+    #weather-info {
+      margin-top: 20px;
+    }
+    canvas {
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Weather Dashboard</h1>
+  <input type="text" id="city" placeholder="Enter city name" />
+  <button id="fetchWeather">Get Weather</button>
+  
+  <div id="weather-info">
+    <p><strong>Temperature:</strong> <span id="temperature"></span>°C</p>
+    <p><strong>Humidity:</strong> <span id="humidity"></span>%</p>
+    <p><strong>Pressure:</strong> <span id="pressure"></span> hPa</p>
+  </div>
+
+  <canvas id="weatherChart" width="400" height="200"></canvas>
+
+  <script>
+    const fetchWeatherBtn = document.getElementById('fetchWeather');
+    const cityInput = document.getElementById('city');
+    const temperatureEl = document.getElementById('temperature');
+    const humidityEl = document.getElementById('humidity');
+    const pressureEl = document.getElementById('pressure');
+    const weatherChartCanvas = document.getElementById('weatherChart').getContext('2d');
+    
+    const getWeather = async (city) => {
+      try {
+        const response = await fetch(`/weather/${city}`);
+        const data = await response.json();
+        
+        // Update DOM with weather info
+        temperatureEl.textContent = data.temperature;
+        humidityEl.textContent = data.humidity;
+        pressureEl.textContent = data.pressure;
+        
+        // Prepare data for graph
+        const weatherData = {
+          labels: ['Temperature', 'Humidity', 'Pressure'],
+          datasets: [{
+            label: 'Weather Data',
+            data: [data.temperature, data.humidity, data.pressure],
+            backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 159, 64, 0.2)'],
+            borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 159, 64, 1)'],
+            borderWidth: 1
+          }]
+        };
+
+        // Create the chart
+        new Chart(weatherChartCanvas, {
+          type: 'bar',
+          data: weatherData,
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true
+              }
+            }
+          }
+        });
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+
+    // Event listener for fetching weather data
+    fetchWeatherBtn.addEventListener('click', () => {
+      const city = cityInput.value.trim();
+      if (city) {
+        getWeather(city);
+      } else {
+        alert('Please enter a city name.');
+      }
+    });
+  </script>
+</body>
 </html>
